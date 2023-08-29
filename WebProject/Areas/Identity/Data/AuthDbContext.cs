@@ -7,6 +7,7 @@ namespace WebProject.Data;
 
 public class AuthDbContext : IdentityDbContext<ApplicationUser>
 {
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public AuthDbContext(DbContextOptions<AuthDbContext> options)
         : base(options)
     {
@@ -19,4 +20,5 @@ public class AuthDbContext : IdentityDbContext<ApplicationUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
+
 }
