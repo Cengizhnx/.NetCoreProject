@@ -22,7 +22,7 @@ namespace WebProject.Controllers
 		public IActionResult Index()
 		{
 			ViewData["UserID"] = _userManager.GetUserId(this.User);
-			return View();
+            return View();
 		}
 
 		public IActionResult Privacy()

@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IdentityRole
+
+<form method="post" action="Create" class="card border-secondary">
+    <div class="card-header">Add Role</div>
+    <div class="px-4">
+        <div class="form-group my-2">
+            <label class="my-1" for="">Name</label>
+            <input type="text" name="Name" class="form-control mb-1" placeholder="Enter Role Name">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="col">
+            <button type="submit" class="btn btn-primary my-2">Submit</button>
+            <a asp-controller="Roles" asp-action="Index" class="btn btn-outline-primary">Back to List</a>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPArtial" />
+    }
+}
