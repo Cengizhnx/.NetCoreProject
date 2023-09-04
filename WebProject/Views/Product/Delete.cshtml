@@ -1,0 +1,42 @@
+﻿@model Product
+
+<form method="post" asp-action="Delete" class="card border-secondary">
+    <div class="card-header">Delete Product</div>
+    <div class="px-4">
+        <div class="form-group my-2">
+            <label class="my-1" asp-for="Title">Title</label>
+            <input type="text" asp-for="Title" disabled class="form-control mb-1" placeholder="Enter Title">
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group my-2">
+            <label class="my-1" asp-for="Description">Description</label>
+            <textarea type="text" asp-for="Description" disabled class="form-control mb-1" style="resize:none" placeholder="Enter Description"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group my-2">
+            <label class="my-1" asp-for="Images">Image</label>
+            <input type="text" asp-for="Images" disabled class="form-control mb-1" placeholder="Enter Image">
+            <span asp-validation-for="Images" class="text-danger"></span>
+        </div>
+
+        <div class="form-group my-2">
+            <label class="my-1" asp-for="Price">Price</label>
+            <input type="text" asp-for="Price" disabled class="form-control mb-1" placeholder="Enter Price">
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="col">
+            <button type="submit" class="btn btn-danger my-2">Delete</button>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary">Back to List</a>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPArtial" />
+    }
+}

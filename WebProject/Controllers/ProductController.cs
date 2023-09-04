@@ -1,37 +1,135 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Data;
+using WebProject.Areas.Identity.Data;
+using WebProject.Data;
 using WebProject.Models;
 
 namespace WebProject.Controllers
 {
     public class ProductController : Controller
     {
-        Uri baseAddress = new Uri("https://api.escuelajs.co/api/v1");
-        private readonly HttpClient _httpClient;
-        List<Product> products = new List<Product>();
+        private readonly AuthDbContext _db;
 
-        public ProductController()
+        public ProductController(AuthDbContext db)
         {
-            _httpClient= new HttpClient();
-            _httpClient.BaseAddress = baseAddress;
+            _db = db;
         }
-        [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            HttpResponseMessage response = _httpClient.GetAsync(_httpClient.BaseAddress + "/products?offset=1&limit=12").Result;
+            IEnumerable<Product> products = _db.Products;
 
-            if(response.IsSuccessStatusCode)
+            if (!String.IsNullOrEmpty(searchString))
             {
-                string data = response.Content.ReadAsStringAsync().Result; 
-                products = JsonConvert.DeserializeObject<List<Product>>(data);
+                products = products.Where(s => s.Title!.Contains(searchString));
             }
 
             return View(products);
         }
 
-        public IActionResult ProductDetail()
+        [HttpGet]
+        public async Task<IActionResult> ProductDetail(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Product? products = await _db.Products.FindAsync(id);
+
+            if (products.Status == true)
+            {
+                return View(products);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+
+            if (products == null)
+            {
+                return NotFound();
+            }
+
+            return View();
+        }
+
+        [HttpGet, Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost, Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                await _db.Products.AddAsync(product);
+                await _db.SaveChangesAsync();
+                //TempData["success"] = "User created successfully !";
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        }
+
+        [HttpGet, Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Product? products = await _db.Products.FindAsync(id);
+
+            if (products == null)
+            {
+                return NotFound();
+            }
             return View(products);
         }
+        [HttpPost, Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Products.Update(product);
+                await _db.SaveChangesAsync();
+                //TempData["success"] = "User updated successfully !";
+                return RedirectToAction("Index");
+            }
+            return View(product);
+        }
+
+        [HttpGet, Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Product? product = await _db.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+        [HttpPost, Authorize(Roles = "Admin"), ActionName("Delete")]
+        public async Task<IActionResult> DeleteUser(int? id)
+        {
+            Product? product = await _db.Products.FindAsync(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            _db.Products.Remove(product);
+            await _db.SaveChangesAsync();
+            //TempData["success"] = "User deleted successfully !";
+            return RedirectToAction("Index");
+        }
+
     }
 }

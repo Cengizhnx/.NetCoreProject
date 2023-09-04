@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Areas.Identity.Data;
+using WebProject.Models;
 
 namespace WebProject.Data;
 
 public class AuthDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<Product> Products { get; set; }
     public AuthDbContext(DbContextOptions<AuthDbContext> options)
         : base(options)
     {

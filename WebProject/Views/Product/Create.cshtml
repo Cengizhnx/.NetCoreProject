@@ -1,0 +1,42 @@
+﻿@model Product
+
+<form method="post" action="Create" class="card border-secondary">
+    <div class="card-header">Add Product</div>
+    <div class="px-4">
+        <div class="form-group my-2">
+            <label class="my-1" for="">Title</label>
+            <input type="text" name="Title" class="form-control mb-1" placeholder="Enter Title">
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group my-2">
+            <label class="my-1" for="">Description</label>
+            <textarea type="text" name="Description" style="resize:none" class="form-control mb-1" placeholder="Enter Description"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group my-2">
+            <label class="my-1" for="">Image</label>
+            <input type="text" name="Images" class="form-control mb-1" placeholder="Enter Image">
+            <span asp-validation-for="Images" class="text-danger"></span>
+        </div>
+
+        <div class="form-group my-2">
+            <label class="my-1" for="">Price</label>
+            <input type="text" name="Price" class="form-control mb-1" placeholder="Enter Price">
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="col">
+            <button type="submit" class="btn btn-primary my-2">Submit</button>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary">Back to List</a>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPArtial" />
+    }
+}

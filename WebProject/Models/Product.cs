@@ -12,7 +12,8 @@ namespace WebProject.Models
         [Required]
         public string? Description { get; set; }
         [Required]
-        public List<String>? Images { get; set; }
+        public string? Images { get; set; }
+        public bool Status { get; set; } = true;
 
     }
 }
