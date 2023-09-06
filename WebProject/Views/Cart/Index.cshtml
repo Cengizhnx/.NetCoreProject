@@ -1,0 +1,47 @@
+﻿@using WebProject.Areas.Identity.Data;
+
+@model IEnumerable<WebProject.Models.Cart>
+
+<h3>Carts (@Model.Count())</h3>
+
+<form asp-controller="User" asp-action="Index" class="my-3">
+    <p>
+        Mail: <input type="text" name="SearchString" class="rounded" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<div class="text-center">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">User ID</th>
+                <th scope="col">Product ID</th>
+                <th scope="col">Price</th>
+                <th scope="col">Date</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Cart user in Model)
+            {
+                <tr>
+                    <td scope="row">@user.Id</td>
+                    <td scope="row">@user.UserId</td>
+                    <td>@user.ProductId</td>
+                    <td>@user.Total</td>
+                    <td>@user.CreatedDateTime</td>
+                    <td>
+                        <form asp-controller="Cart" asp-action="Delete" asp-route-id="@user.Id">
+                            <button type="submit" class="btn btn-outline-danger "><i class="bi bi-trash"></i> Delete </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
