@@ -24,9 +24,12 @@ namespace WebProject.Controllers
         }
         public IActionResult Index()
         {
+            //IEnumerable<Cart> carts = _db.Carts;
+            //carts = carts.Where(i => i.UserId == userId);
             string userId = GetUserId();
-            IEnumerable<Cart> carts = _db.Carts;
-            carts = carts.Where(i => i.UserId == userId);
+            var carts = GetCart(userId);
+            ViewData["Products"] = GetProduct();
+            ViewData["Total"] = GetTotal();
             return View(carts);
         }
 
@@ -39,7 +42,7 @@ namespace WebProject.Controllers
         public async Task<IActionResult> Create(int id)
         {
             string userId = GetUserId(); 
-            var carts = _db.Carts.Where(i => i.UserId == userId);
+            var carts = GetCart(userId);
 
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace WebProject.Controllers
             return View();
 
         }
+
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -80,6 +84,36 @@ namespace WebProject.Controllers
             var principal = _httpContextAccessor.HttpContext.User;
             string userId = _userManager.GetUserId(principal);
             return userId;
+        }
+        private IEnumerable<Cart> GetCart(string id)
+        {
+            var carts = _db.Carts.Where(i=>i.UserId == id);
+            return carts;
+        }
+        private IEnumerable<Product> GetProduct()
+        {
+            var products = _db.Products;
+            return products;
+        }
+
+        private int GetTotal()
+        {
+            var total = 0;
+            string userId = GetUserId();
+            var carts = GetCart(userId);
+            var products = GetProduct();
+
+            foreach (var cart in carts)
+            {
+                foreach (var product in products)
+                {
+                    if (product.Id == cart.ProductId)
+                    {
+                        total += product.Price;
+                    }
+                }
+            }
+            return total;
         }
 
     }

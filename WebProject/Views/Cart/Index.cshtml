@@ -2,46 +2,89 @@
 
 @model IEnumerable<WebProject.Models.Cart>
 
-<h3>Carts (@Model.Count())</h3>
+@{
+    IEnumerable<Product> products = ViewData["Products"] as IEnumerable<Product>;
+    var total = ViewData["Total"];
+    //IEnumerable<Cart> cart = ViewData["Carts"] as IEnumerable<Cart>;
+}
 
-<form asp-controller="User" asp-action="Index" class="my-3">
-    <p>
-        Mail: <input type="text" name="SearchString" class="rounded" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
+@if (@Model.Count() > 0)
+{
+    <section class="py-2">
+        <div class="container">
+            <div class="row w-100">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <h3 class="display-5 my-2 text-center">Shopping Cart 🛒</h3>
+                    <p class="mb-2 text-center">
+                        <i class="text-info font-weight-bold text-decoration-underline">@Model.Count()</i> items in your cart
+                    </p>
+                    <table id="shoppingCart" class="table table-condensed table-responsive table-borderless">
+                        <thead>
+                            <tr>
+                                <th style="width:60%" class="text-decoration-underline">Product</th>
+                                <th style="width:10%" class="text-decoration-underline">Price</th>
+                                <th style="width:16%" class="text-decoration-underline">Created Date</th>
+                                <th style="width:12%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Cart carts in Model)
+                            {
+                                <tr class=" border border-primary-subtle">
+                                    @foreach (Product product in products)
+                                    {
+                                        @if (carts.ProductId == product.Id)
+                                        {
+                                            <td data-th="Product">
+                                                <div class="row">
+                                                    <div class="col-md-3 text-left">
+                                                        <img src="@Url.Content(product.Images)" alt="" class="img-fluid d-none d-md-block rounded mb-2 shadow">
+                                                    </div>
+                                                    <div class="col-md-9 text-left mt-sm-2">
+                                                        <h4>@product.Title</h4>
+                                                        <p class="font-weight-light">@product.Description</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td data-th="Price">$@product.Price</td>
+                                        }
+                                    }
+                                    <td>@carts.CreatedDateTime</td>
+                                    <td>
+                                        <form asp-controller="Cart" asp-action="Delete" asp-route-id="@carts.Id">
+                                            <button type="submit" class="btn btn-outline-danger "><i class="bi bi-trash"></i> Delete </button>
+                                        </form>
+                                    </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <h4 class="mx-2">Subtotal:</h4>
+                        <h1 class="mx-2">$@total</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 d-flex align-items-center px-4">
+                <div class="col-sm-6 text-md-left">
+                    <a asp-controller="Product" asp-action="Index">
+                        <i class="fas fa-arrow-left mr-2"></i>Continue Shopping
+                    </a>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center justify-content-end">
+@*                    <form asp-controller="Order" asp-action="Create">
+*@                        <button type="submit" class="btn btn-outline-info "><i class="bi bi-trash"></i>Checkout </button>
+@*                    </form>
+*@                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <h3>Cart is empty !</h3>
+}
 
-<div class="text-center">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">User ID</th>
-                <th scope="col">Product ID</th>
-                <th scope="col">Price</th>
-                <th scope="col">Date</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Cart user in Model)
-            {
-                <tr>
-                    <td scope="row">@user.Id</td>
-                    <td scope="row">@user.UserId</td>
-                    <td>@user.ProductId</td>
-                    <td>@user.Total</td>
-                    <td>@user.CreatedDateTime</td>
-                    <td>
-                        <form asp-controller="Cart" asp-action="Delete" asp-route-id="@user.Id">
-                            <button type="submit" class="btn btn-outline-danger "><i class="bi bi-trash"></i> Delete </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
 
 
 
